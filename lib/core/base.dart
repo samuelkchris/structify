@@ -1,4 +1,3 @@
-
 import 'dart:ffi';
 import 'dart:typed_data';
 import 'package:ffi/ffi.dart';
@@ -10,12 +9,21 @@ class StructField {
   final int size;
   final bool packed;
 
+  /// Constructs a [StructField] annotation.
+  ///
+  /// * [offset]: The offset of the field within the struct.
+  /// * [size]: The size of the field. Defaults to 1.
+  /// * [packed]: Whether the field is packed. Defaults to false.
   const StructField(this.offset, {this.size = 1, this.packed = false});
 }
 
 /// Size annotation for specifying dynamic array sizes
 class Size {
   final int size;
+
+  /// Constructs a [Size] annotation.
+  ///
+  /// * [size]: The size of the array. Defaults to 0.
   const Size([this.size = 0]);
 }
 
@@ -27,15 +35,17 @@ final class Point extends Struct implements DebugPrintable {
   @Int32()
   external int y;
 
-  /// Create a new Point struct
+  /// Allocates memory for a new [Point] struct.
   static Pointer<Point> alloc() {
     return calloc<Point>();
   }
 
+  /// Creates a new [Point] instance.
   static Point create() {
     return alloc().ref;
   }
 
+  /// Serializes the [Point] struct to a [ByteBuffer].
   ByteBuffer serialize() {
     final buffer = ByteData(sizeOf<Point>());
     buffer.setInt32(0, x, Endian.host);
@@ -43,6 +53,9 @@ final class Point extends Struct implements DebugPrintable {
     return buffer.buffer;
   }
 
+  /// Deserializes a [ByteBuffer] to a [Point] struct.
+  ///
+  /// * [buffer]: The buffer containing the serialized data.
   static Point deserialize(ByteBuffer buffer) {
     final point = Point.create();
     final data = ByteData.view(buffer);
@@ -56,9 +69,9 @@ final class Point extends Struct implements DebugPrintable {
 
   @override
   Map<String, dynamic> get debugFields => {
-    'x': x,
-    'y': y,
-  };
+        'x': x,
+        'y': y,
+      };
 
   @override
   String toString() {
@@ -75,15 +88,17 @@ final class PackedPoint extends Struct {
   @Int32()
   external int y;
 
-  /// Create a new PackedPoint struct
+  /// Allocates memory for a new [PackedPoint] struct.
   static Pointer<PackedPoint> alloc() {
     return calloc<PackedPoint>();
   }
 
+  /// Creates a new [PackedPoint] instance.
   static PackedPoint create() {
     return alloc().ref;
   }
 
+  /// Serializes the [PackedPoint] struct to a [ByteBuffer].
   ByteBuffer serialize() {
     final buffer = ByteData(sizeOf<PackedPoint>());
     buffer.setInt32(0, x, Endian.host);
@@ -91,6 +106,9 @@ final class PackedPoint extends Struct {
     return buffer.buffer;
   }
 
+  /// Deserializes a [ByteBuffer] to a [PackedPoint] struct.
+  ///
+  /// * [buffer]: The buffer containing the serialized data.
   static PackedPoint deserialize(ByteBuffer buffer) {
     final point = PackedPoint.create();
     final data = ByteData.view(buffer);
@@ -105,15 +123,19 @@ final class Rectangle extends Struct {
   @Array(4)
   external Array<Int32> points;
 
-  /// Create a new Rectangle struct
+  /// Allocates memory for a new [Rectangle] struct.
   static Pointer<Rectangle> alloc() {
     return calloc<Rectangle>();
   }
 
+  /// Creates a new [Rectangle] instance.
   static Rectangle create() {
     return alloc().ref;
   }
 
+  /// Sets the points of the [Rectangle] struct.
+  ///
+  /// * [x1], [y1], [x2], [y2]: The coordinates of the points.
   void setPoints(int x1, int y1, int x2, int y2) {
     points[0] = x1;
     points[1] = y1;
@@ -121,6 +143,7 @@ final class Rectangle extends Struct {
     points[3] = y2;
   }
 
+  /// Serializes the [Rectangle] struct to a [ByteBuffer].
   ByteBuffer serialize() {
     final buffer = ByteData(sizeOf<Rectangle>());
     for (var i = 0; i < 4; i++) {
@@ -129,6 +152,9 @@ final class Rectangle extends Struct {
     return buffer.buffer;
   }
 
+  /// Deserializes a [ByteBuffer] to a [Rectangle] struct.
+  ///
+  /// * [buffer]: The buffer containing the serialized data.
   static Rectangle deserialize(ByteBuffer buffer) {
     final rect = Rectangle.create();
     final data = ByteData.view(buffer);
@@ -141,7 +167,9 @@ final class Rectangle extends Struct {
 
 /// Memory management utilities
 class StructAlloc {
-  /// Free memory for struct
+  /// Frees memory allocated for a struct.
+  ///
+  /// * [pointer]: The pointer to the allocated memory.
   static void free<T extends Struct>(Pointer<T> pointer) {
     calloc.free(pointer);
   }

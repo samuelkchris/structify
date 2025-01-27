@@ -1,10 +1,8 @@
-
 import 'dart:ffi';
 import 'package:ffi/ffi.dart';
 import 'package:structify/core/union.dart';
 import 'package:structify/types/struct_types.dart';
 import 'base.dart';
-
 
 /// A scope-based memory manager for automatic cleanup
 class StructScope {
@@ -12,6 +10,8 @@ class StructScope {
   bool _isDisposed = false;
 
   /// Register an existing pointer for cleanup
+  ///
+  /// * [ptr]: The pointer to register.
   void register(Pointer<NativeType> ptr) {
     if (_isDisposed) {
       throw StateError('Cannot register pointer in disposed scope');
@@ -20,6 +20,8 @@ class StructScope {
   }
 
   /// Manually free a pointer and remove it from cleanup
+  ///
+  /// * [ptr]: The pointer to free.
   void free(Pointer<NativeType> ptr) {
     if (_isDisposed) {
       throw StateError('Cannot free memory in disposed scope');
@@ -41,6 +43,9 @@ class StructScope {
   }
 
   /// Allocate an array of Points
+  ///
+  /// * [count]: The number of points to allocate.
+  /// Returns a pointer to the allocated memory.
   Pointer<Point> allocPoints(int count) {
     if (_isDisposed) {
       throw StateError('Cannot allocate memory in disposed scope');
@@ -51,11 +56,15 @@ class StructScope {
   }
 
   /// Allocate single Point
+  ///
+  /// Returns a pointer to the allocated memory.
   Pointer<Point> allocPoint() {
     return allocPoints(1);
   }
 
   /// Allocate single Rectangle
+  ///
+  /// Returns a pointer to the allocated memory.
   Pointer<Rectangle> allocRectangle() {
     if (_isDisposed) {
       throw StateError('Cannot allocate memory in disposed scope');
@@ -66,6 +75,8 @@ class StructScope {
   }
 
   /// Allocate single ComplexStruct
+  ///
+  /// Returns a pointer to the allocated memory.
   Pointer<ComplexStruct> allocComplexStruct() {
     if (_isDisposed) {
       throw StateError('Cannot allocate memory in disposed scope');
@@ -76,6 +87,8 @@ class StructScope {
   }
 
   /// Allocate single DataUnion
+  ///
+  /// Returns a pointer to the allocated memory.
   Pointer<DataUnion> allocDataUnion() {
     if (_isDisposed) {
       throw StateError('Cannot allocate memory in disposed scope');
@@ -86,6 +99,8 @@ class StructScope {
   }
 
   /// Allocate single TaggedUnion
+  ///
+  /// Returns a pointer to the allocated memory.
   Pointer<TaggedUnion> allocTaggedUnion() {
     if (_isDisposed) {
       throw StateError('Cannot allocate memory in disposed scope');
@@ -101,16 +116,23 @@ class StructMemory {
   static final Map<String, StructScope> _scopes = {};
 
   /// Create or get a named scope
+  ///
+  /// * [name]: The name of the scope.
+  /// Returns the created or existing scope.
   static StructScope scope(String name) {
     return _scopes.putIfAbsent(name, () => StructScope());
   }
 
   /// Create a new anonymous scope
+  ///
+  /// Returns the created scope.
   static StructScope createScope() {
     return StructScope();
   }
 
   /// Dispose a named scope
+  ///
+  /// * [name]: The name of the scope to dispose.
   static void disposeScope(String name) {
     final scope = _scopes.remove(name);
     scope?.dispose();

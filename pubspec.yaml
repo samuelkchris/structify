@@ -1,7 +1,7 @@
 name: structify
-description: "A new Flutter plugin project."
+description: "A powerful Dart library for working with C-style structs, providing memory alignment, efficient serialization, and safety features."
 version: 0.0.1
-homepage:
+homepage: https://github.com/samuelkchris/structify
 
 environment:
   sdk: '>=3.4.0 <4.0.0'
@@ -78,3 +78,9 @@ flutter:
   #
   # For details regarding fonts in packages, see
   # https://flutter.dev/custom-fonts/#from-packages
+topics:
+  - ffi
+  - memory
+  - struct
+  - binary
+  - serialization

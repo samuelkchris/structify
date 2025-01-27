@@ -1,0 +1,30 @@
+tags:
+  performance:
+    timeout: 2x
+  integration:
+    timeout: 3x
+
+platforms:
+  - vm
+
+concurrency: 4
+
+coverage_reports:
+  - html
+  - lcov
+
+paths:
+  - test/
+
+filename: "*_test.dart"
+
+verbose-trace: true
+
+# Add a custom reporter for CI environments
+reporter: expanded
+
+# Configure retry behavior for flaky tests
+retry: 2
+
+# Test randomization seed (remove or change for different ordering)
+# seed: 12345

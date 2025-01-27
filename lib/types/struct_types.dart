@@ -5,24 +5,37 @@ import '../core/base.dart';
 
 /// Complex struct example showing nested structs and arrays
 final class ComplexStruct extends Struct {
+  /// The ID of the complex struct
   @Int32()
   external int id;
 
+  /// The start point of the complex struct
   external Point start;
 
+  /// The end point of the complex struct
   external Point end;
 
+  /// The data array of the complex struct
   @Array(10)
   external Array<Int32> data;
 
+  /// Allocates memory for a `ComplexStruct` instance.
+  ///
+  /// Returns a pointer to the allocated memory.
   static Pointer<ComplexStruct> alloc() {
     return calloc<ComplexStruct>();
   }
 
+  /// Creates a `ComplexStruct` instance.
+  ///
+  /// Returns a reference to the allocated `ComplexStruct`.
   static ComplexStruct create() {
     return alloc().ref;
   }
 
+  /// Serializes the `ComplexStruct` to a `ByteBuffer`.
+  ///
+  /// Returns a `ByteBuffer` containing the serialized data.
   ByteBuffer serialize() {
     final buffer = ByteData(sizeOf<ComplexStruct>());
     var offset = 0;
@@ -56,6 +69,10 @@ final class ComplexStruct extends Struct {
     return buffer.buffer;
   }
 
+  /// Deserializes a `ComplexStruct` from a `ByteBuffer`.
+  ///
+  /// * [buffer]: The `ByteBuffer` containing the serialized data.
+  /// Returns a `ComplexStruct` instance.
   static ComplexStruct deserialize(ByteBuffer buffer) {
     final struct = ComplexStruct.create();
     final data = ByteData.view(buffer);
@@ -93,6 +110,9 @@ final class ComplexStruct extends Struct {
 
 /// Helper for numeric array operations
 extension Int32ArrayHelpers on Array<Int32> {
+  /// Converts the array to a `ByteBuffer`.
+  ///
+  /// Returns a `ByteBuffer` containing the array data.
   ByteBuffer asBytes() {
     const size = 10; // Fixed size for now, can be made dynamic later
     final buffer = calloc<Int32>(size);
@@ -107,6 +127,10 @@ extension Int32ArrayHelpers on Array<Int32> {
 }
 
 /// Alignment helper
+///
+/// * [offset]: The current offset.
+/// * [alignment]: The alignment requirement.
+/// Returns the aligned offset.
 int alignTo(int offset, int alignment) {
   return (offset + alignment - 1) & ~(alignment - 1);
 }

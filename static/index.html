@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Structify Documentation</title>
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --bg-color: #ffffff;
+            --text-color: #1f2937;
+            --sidebar-width: 300px;
+            --header-height: 60px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            color: var(--text-color);
+            line-height: 1.6;
+            background: var(--bg-color);
+        }
+
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: var(--header-height);
+            background: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            padding: 0 2rem;
+            z-index: 100;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .sidebar {
+            position: fixed;
+            top: var(--header-height);
+            left: 0;
+            bottom: 0;
+            width: var(--sidebar-width);
+            background: #f8fafc;
+            padding: 2rem;
+            overflow-y: auto;
+            border-right: 1px solid #e5e7eb;
+        }
+
+        .nav-item {
+            padding: 0.5rem 0;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #4b5563;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .nav-item:hover {
+            color: var(--primary-color);
+        }
+
+        .nav-item.active {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .content {
+            margin-left: var(--sidebar-width);
+            margin-top: var(--header-height);
+            padding: 2rem;
+            max-width: 1200px;
+        }
+
+        .markdown-content {
+            padding: 1rem;
+        }
+
+        .markdown-content h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #e5e7eb;
+        }
+
+        .markdown-content h2 {
+            font-size: 2rem;
+            margin: 2rem 0 1rem;
+            color: #1f2937;
+        }
+
+        .markdown-content h3 {
+            font-size: 1.5rem;
+            margin: 1.5rem 0 1rem;
+            color: #374151;
+        }
+
+        .markdown-content p {
+            margin-bottom: 1rem;
+            line-height: 1.8;
+        }
+
+        .markdown-content code {
+            background: #f1f5f9;
+            padding: 0.2rem 0.4rem;
+            border-radius: 0.25rem;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+            font-size: 0.875rem;
+        }
+
+        .markdown-content pre {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+
+        .markdown-content ul, .markdown-content ol {
+            margin: 1rem 0;
+            padding-left: 2rem;
+        }
+
+        .markdown-content blockquote {
+            border-left: 4px solid var(--primary-color);
+            padding-left: 1rem;
+            margin: 1rem 0;
+            color: #4b5563;
+        }
+
+        .dark-mode-toggle {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            transition: transform 0.2s;
+        }
+
+        .dark-mode-toggle:hover {
+            transform: scale(1.1);
+        }
+
+        .search-bar {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+        }
+
+        .search-bar input {
+            background: transparent;
+            border: none;
+            color: white;
+            outline: none;
+            width: 200px;
+        }
+
+        .search-bar input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* Dark mode styles */
+        body.dark-mode {
+            --bg-color: #1a1a1a;
+            --text-color: #e5e7eb;
+        }
+
+        body.dark-mode .sidebar {
+            background: #262626;
+            border-color: #404040;
+        }
+
+        body.dark-mode .markdown-content code {
+            background: #2d2d2d;
+        }
+
+        body.dark-mode .nav-item {
+            color: #a3a3a3;
+        }
+
+        body.dark-mode .markdown-content h1 {
+            border-color: #404040;
+        }
+          /* Copy button styles */
+        .copy-button {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            border-radius: 0.25rem;
+            padding: 0.25rem 0.5rem;
+            color: #fff;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        pre {
+            position: relative;
+        }
+
+        pre:hover .copy-button {
+            opacity: 1;
+        }
+
+        .copy-button:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Search results styles */
+        .search-results {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            max-height: 400px;
+            overflow-y: auto;
+            margin-top: 0.5rem;
+            display: none;
+        }
+
+        .search-results.active {
+            display: block;
+        }
+
+        .search-result-item {
+            padding: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .search-result-item:hover {
+            background-color: #f3f4f6;
+        }
+
+        .search-result-title {
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 0.25rem;
+        }
+
+        .search-result-snippet {
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+
+        .highlight {
+            background-color: #fef3c7;
+            padding: 0.125rem 0.25rem;
+            border-radius: 0.25rem;
+        }
+
+        /* Table of Contents */
+        .toc {
+            position: fixed;
+            top: calc(var(--header-height) + 2rem);
+            right: 2rem;
+            width: 250px;
+            background: #f8fafc;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            max-height: calc(100vh - var(--header-height) - 4rem);
+            overflow-y: auto;
+            border: 1px solid #e5e7eb;
+        }
+
+        .toc-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .toc-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .toc-item {
+            padding: 0.25rem 0;
+            font-size: 0.875rem;
+        }
+
+        .toc-item a {
+            color: #4b5563;
+            text-decoration: none;
+            transition: color 0.2s;
+            display: block;
+            padding: 0.25rem 0;
+        }
+
+        .toc-item a:hover {
+            color: var(--primary-color);
+        }
+
+        .toc-item.active a {
+            color: var(--primary-color);
+            font-weight: 500;
+        }
+
+        /* Progress bar */
+        .progress-bar {
+            position: fixed;
+            top: var(--header-height);
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: #e5e7eb;
+            z-index: 100;
+        }
+
+        .progress-indicator {
+            height: 100%;
+            background: var(--primary-color);
+            width: 0%;
+            transition: width 0.2s;
+        }
+
+        /* Responsive design */
+        @media (max-width: 1024px) {
+            .toc {
+                display: none;
+            }
+
+            .content {
+                margin-right: 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s;
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .content {
+                margin-left: 0;
+            }
+
+            .menu-toggle {
+                display: block;
+            }
+        }
+
+        /* Loading indicator */
+        .loading {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .loading.active {
+            display: block;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+<header class="header">
+    <h1>📦 Structify Docs</h1>
+    <div class="search-bar">
+        <i class="fas fa-search"></i>
+        <input type="text" placeholder="Search documentation...">
+    </div>
+</header>
+
+<nav class="sidebar">
+    <a href="#quickstart" class="nav-item active">
+        <i class="fas fa-rocket"></i>
+        Quickstart Guide
+    </a>
+    <a href="#api" class="nav-item">
+        <i class="fas fa-book"></i>
+        API Reference
+    </a>
+    <a href="#examples" class="nav-item">
+        <i class="fas fa-code"></i>
+        Examples
+    </a>
+    <a href="#benchmarks" class="nav-item">
+        <i class="fas fa-chart-line"></i>
+        Benchmarks
+    </a>
+</nav>
+
+<main class="content">
+    <div class="markdown-content" id="markdown-content">
+        <!-- Markdown content will be rendered here -->
+    </div>
+</main>
+
+<button class="dark-mode-toggle" id="darkModeToggle">
+    <i class="fas fa-moon"></i>
+</button>
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-dart.min.js"></script>
+<script>
+    // Initialize marked
+    marked.use({
+        mangle: false,
+        headerIds: false,
+        gfm: true
+    });
+
+    // Navigation handling
+    const navItems = document.querySelectorAll('.nav-item');
+    navItems.forEach(item => {
+        item.addEventListener('click', (e) => {
+            e.preventDefault();
+            navItems.forEach(i => i.classList.remove('active'));
+            item.classList.add('active');
+            const section = item.getAttribute('href').substring(1);
+            loadMarkdownContent(section);
+        });
+    });
+
+    // Dark mode toggle
+    const darkModeToggle = document.getElementById('darkModeToggle');
+    darkModeToggle.addEventListener('click', () => {
+        document.body.classList.toggle('dark-mode');
+        const icon = darkModeToggle.querySelector('i');
+        icon.classList.toggle('fa-moon');
+        icon.classList.toggle('fa-sun');
+        localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+    });
+
+    // Initialize dark mode from localStorage
+    if (localStorage.getItem('darkMode') === 'true') {
+        document.body.classList.add('dark-mode');
+        darkModeToggle.querySelector('i').classList.replace('fa-moon', 'fa-sun');
+    }
+
+    // Search functionality
+    const searchInput = document.querySelector('.search-bar input');
+    searchInput.addEventListener('input', (e) => {
+        const searchTerm = e.target.value.toLowerCase();
+        // Simple search through navigation items
+        navItems.forEach(item => {
+            const text = item.textContent.toLowerCase();
+            if (text.includes(searchTerm)) {
+                item.style.display = 'flex';
+            } else {
+                item.style.display = 'none';
+            }
+        });
+    });
+
+    // Load markdown content
+    async function loadMarkdownContent(section) {
+        try {
+            const response = await fetch(`docs/${section}.md`);
+            if (!response.ok) {
+                throw new Error(`Failed to load ${section} documentation`);
+            }
+            const markdown = await response.text();
+            document.getElementById('markdown-content').innerHTML = marked.parse(markdown);
+            Prism.highlightAll();
+        } catch (error) {
+            console.error('Error loading documentation:', error);
+            document.getElementById('markdown-content').innerHTML = `
+                <h1>Error</h1>
+                <p>Failed to load ${section} documentation. Make sure you have created the file docs/${section}.md</p>
+                <pre>Error details: ${error.message}</pre>
+            `;
+        }
+    }
+
+    // Add copy button to code blocks
+    function addCopyButtons() {
+        const codeBlocks = document.querySelectorAll('pre code');
+        codeBlocks.forEach((codeBlock) => {
+            const button = document.createElement('button');
+            button.className = 'copy-button';
+            button.textContent = 'Copy';
+
+            button.addEventListener('click', async () => {
+                try {
+                    await navigator.clipboard.writeText(codeBlock.textContent);
+                    button.textContent = 'Copied!';
+                    setTimeout(() => {
+                        button.textContent = 'Copy';
+                    }, 2000);
+                } catch (err) {
+                    console.error('Failed to copy text:', err);
+                    button.textContent = 'Failed to copy';
+                }
+            });
+
+            const pre = codeBlock.parentElement;
+            pre.style.position = 'relative';
+            pre.insertBefore(button, codeBlock);
+        });
+    }
+
+    // Initialize content and add observers
+    document.addEventListener('DOMContentLoaded', () => {
+        // Load initial content
+        loadMarkdownContent('quickstart');
+
+        // Create observer for code blocks
+        const observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                if (mutation.addedNodes.length) {
+                    addCopyButtons();
+                }
+            });
+        });
+
+        // Start observing the markdown content div
+        observer.observe(document.getElementById('markdown-content'), {
+            childList: true,
+            subtree: true
+        });
+    });
+</script>
+</body>
+</html>
