@@ -215,15 +215,13 @@ void analyzeStructLayout(AlignedStruct struct) {
     totalSize = field.nextOffset;
 
     stdout.write('Field at offset ${field.offset}: '
-          'size ${field.size}, '
-          'alignment ${field.alignment.value}, '
-          'padding $padding bytes');
-
+        'size ${field.size}, '
+        'alignment ${field.alignment.value}, '
+        'padding $padding bytes');
   }
 
   // Round up total size to struct alignment
   totalSize = AlignmentUtils.calculateAlignedSize(totalSize, 16);
 
   stdout.write('Total struct size: $totalSize bytes');
-
 }

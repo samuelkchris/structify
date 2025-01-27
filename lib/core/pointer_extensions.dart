@@ -16,9 +16,7 @@ extension PointBatchExt on List<Pointer<Point>> {
   /// Prints all points in the list.
   void printAll() {
     for (var i = 0; i < length; i++) {
-
       stdout.write('[$i]: ${this[i].ref}');
-
     }
   }
 

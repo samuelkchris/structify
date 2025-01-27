@@ -26,9 +26,11 @@ void main() {
     });
 
     test('should handle multiple allocations', () {
-      final points = List.generate(5, (i) => scope.allocPoint()
-        ..ref.x = i
-        ..ref.y = i * 2);
+      final points = List.generate(
+          5,
+          (i) => scope.allocPoint()
+            ..ref.x = i
+            ..ref.y = i * 2);
 
       for (var i = 0; i < points.length; i++) {
         expect(points[i].ref.x, equals(i));
@@ -137,7 +139,8 @@ void main() {
 
     test('MemoryGuard should detect corruption', () {
       final pointer = Point.alloc();
-      final guard = MemoryGuard(pointer, sizeOf<Point>(), debugName: 'TestGuard');
+      final guard =
+          MemoryGuard(pointer, sizeOf<Point>(), debugName: 'TestGuard');
 
       guard.check(); // Should not throw
 

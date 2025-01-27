@@ -1,4 +1,3 @@
-
 import 'dart:ffi';
 import 'dart:io';
 import 'package:structify/structify.dart';
@@ -40,25 +39,30 @@ void main() {
     final value = array.ref.at<Int32>(i).value;
     stdout.write('  [$i]: $value');
   }
-  stdout.write('  Length: ${array.ref.length}, Capacity: ${array.ref.capacity}\n');
+  stdout.write(
+      '  Length: ${array.ref.length}, Capacity: ${array.ref.capacity}\n');
 
   // 3. Mixed Endianness Network Message
   stdout.write('3. Network Message with Mixed Endianness:');
   final msg = NetworkMessage.alloc();
 
   // Set fields with different endianness
-  msg.ref.messageId = 0x12345678;    // Will be stored in network byte order
-  msg.ref.flags = 0xAABBCCDD;        // Will be stored in host byte order
-  msg.ref.timestamp = 0x1122334455667788;  // Will be stored in little-endian
+  msg.ref.messageId = 0x12345678; // Will be stored in network byte order
+  msg.ref.flags = 0xAABBCCDD; // Will be stored in host byte order
+  msg.ref.timestamp = 0x1122334455667788; // Will be stored in little-endian
 
   // Add some payload data
   final payload = Uint8List.fromList([0xDE, 0xAD, 0xBE, 0xEF]);
   msg.ref.setData(payload);
 
-  stdout.write('Message ID (network order): 0x${msg.ref.messageId.toRadixString(16).padLeft(8, '0')}');
-  stdout.write('Flags (host order): 0x${msg.ref.flags.toRadixString(16).padLeft(8, '0')}');
-  stdout.write('Timestamp (little-endian): 0x${msg.ref.timestamp.toRadixString(16).padLeft(16, '0')}');
-  stdout.write('Payload: ${msg.ref.getData().map((b) => '0x${b.toRadixString(16).padLeft(2, '0')}').join(', ')}\n');
+  stdout.write(
+      'Message ID (network order): 0x${msg.ref.messageId.toRadixString(16).padLeft(8, '0')}');
+  stdout.write(
+      'Flags (host order): 0x${msg.ref.flags.toRadixString(16).padLeft(8, '0')}');
+  stdout.write(
+      'Timestamp (little-endian): 0x${msg.ref.timestamp.toRadixString(16).padLeft(16, '0')}');
+  stdout.write(
+      'Payload: ${msg.ref.getData().map((b) => '0x${b.toRadixString(16).padLeft(2, '0')}').join(', ')}\n');
 
   // 4. Memory Analysis
   stdout.write('4. Memory Layout Analysis:');
@@ -66,7 +70,8 @@ void main() {
   stdout.write('  Size: ${sizeOf<SimdVector>()} bytes');
   stdout.write('  Alignment: 16 bytes (optimized for SIMD)');
   stdout.write('  Data structure: 4 x Float32 (${4 * sizeOf<Float>()} bytes)');
-  stdout.write('  Memory efficiency: ${(4 * sizeOf<Float>() / sizeOf<SimdVector>() * 100).toStringAsFixed(1)}%\n');
+  stdout.write(
+      '  Memory efficiency: ${(4 * sizeOf<Float>() / sizeOf<SimdVector>() * 100).toStringAsFixed(1)}%\n');
 
   stdout.write('Network Message:');
   stdout.write('  Size: ${sizeOf<NetworkMessage>()} bytes');

@@ -168,10 +168,6 @@ class PointPool extends BaseStructPool {
   ///
   /// Returns a string showing the state of each slot in the pool.
   String debugState() {
-    return 'Pool State:\n${_used
-            .asMap()
-            .entries
-            .map((e) => '${e.key}: ${e.value ? "used" : "free"}')
-            .join('\n')}';
+    return 'Pool State:\n${_used.asMap().entries.map((e) => '${e.key}: ${e.value ? "used" : "free"}').join('\n')}';
   }
 }

@@ -1,4 +1,3 @@
-
 /// A library for working with C-style structs and unions in Dart
 library structify;
 

@@ -91,7 +91,8 @@ final class StructStringArray extends Struct {
   /// @param arrayCapacity The capacity of the string array.
   /// @param stringCapacity The capacity of each string in the array.
   /// @return A pointer to the newly created `StructStringArray`.
-  static Pointer<StructStringArray> create(int arrayCapacity, int stringCapacity) {
+  static Pointer<StructStringArray> create(
+      int arrayCapacity, int stringCapacity) {
     final ptr = calloc<StructStringArray>();
     ptr.ref.data = calloc<Pointer<Uint8>>(arrayCapacity);
     ptr.ref.capacity = arrayCapacity;
@@ -187,7 +188,8 @@ final class StringStruct extends Struct {
   }) {
     final ptr = calloc<StringStruct>();
     ptr.ref.name = StructString.create(nameCapacity).ref;
-    ptr.ref.tags = StructStringArray.create(tagsCapacity, tagStringCapacity).ref;
+    ptr.ref.tags =
+        StructStringArray.create(tagsCapacity, tagStringCapacity).ref;
     return ptr;
   }
 

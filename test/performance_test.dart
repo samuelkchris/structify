@@ -60,7 +60,7 @@ void main() {
     test('SIMD Vector Operations Performance', () {
       final vectors = List.generate(
         100,
-            (_) => SimdVector.alloc(),
+        (_) => SimdVector.alloc(),
       );
 
       perfTest.measure(() {
@@ -99,7 +99,7 @@ void main() {
     test('String Operations Performance', () {
       final strings = List.generate(
         100,
-            (_) => StructString.create(50),
+        (_) => StructString.create(50),
       );
 
       perfTest.measure(() {
@@ -119,9 +119,11 @@ void main() {
       perfTest.measure(() {
         for (var i = 0; i < iterationCount ~/ 100; i++) {
           withScope((scope) {
-            final points = List.generate(100, (j) => scope.allocPoint()
-              ..ref.x = j
-              ..ref.y = j * 2);
+            final points = List.generate(
+                100,
+                (j) => scope.allocPoint()
+                  ..ref.x = j
+                  ..ref.y = j * 2);
 
             // Perform some operations
             for (var point in points) {
